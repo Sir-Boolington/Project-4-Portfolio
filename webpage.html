@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthony Rojas — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0e;
+    --bg2: #111114;
+    --surface: #17171b;
+    --border: #2a2a30;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.12);
+    --text: #e8e6e0;
+    --text-muted: #7a7870;
+    --text-dim: #4a4845;
+    --accent: #c9a84c;
+    --red: #d4614a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── CUSTOM CURSOR ─────────────────────────────── */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 32px; height: 32px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease-out, width 0.3s, height 0.3s;
+  }
+
+  /* ─── NAV ────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.4rem 4rem;
+    background: linear-gradient(to bottom, rgba(12,12,14,0.95), transparent);
+    backdrop-filter: blur(6px);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; font-weight: 400; letter-spacing: 0.05em;
+    color: var(--text); text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; font-weight: 400;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-muted); text-decoration: none;
+    transition: color 0.25s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -3px; left: 0; right: 0;
+    height: 1px; background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* ─── HERO ───────────────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 7rem 4rem 6rem;
+    position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 7vw, 7.5rem);
+    font-weight: 300; line-height: 0.92;
+    color: var(--text); letter-spacing: -0.02em;
+    opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+  }
+  .hero-name em { font-style: italic; color: var(--gold-light); }
+  .hero-tagline {
+    margin-top: 2rem;
+    font-size: 1rem; font-weight: 300; line-height: 1.7;
+    color: var(--text-muted); max-width: 380px;
+    opacity: 0; animation: fadeUp 0.9s 0.7s forwards;
+  }
+  .hero-cta {
+    display: flex; gap: 1rem; margin-top: 3rem;
+    opacity: 0; animation: fadeUp 0.9s 0.9s forwards;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.8rem 1.8rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    background: transparent;
+    transition: all 0.3s; cursor: pointer;
+  }
+  .btn:hover { background: var(--gold); color: var(--bg); }
+  .btn-solid { background: var(--gold); color: var(--bg); }
+  .btn-solid:hover { background: var(--gold-light); border-color: var(--gold-light); }
+
+  .hero-right {
+    position: relative; overflow: hidden;
+    background: var(--surface);
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+  }
+  .hero-stat-block {
+    position: absolute; bottom: 6rem; left: 4rem;
+    display: flex; flex-direction: column; gap: 2rem;
+    opacity: 0; animation: fadeLeft 1s 1s forwards;
+  }
+  .hero-stat { }
+  .hero-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; font-weight: 300; color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-muted); margin-top: 0.3rem;
+  }
+  .hero-accent-line {
+    position: absolute; top: 0; left: 0; width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0.4;
+  }
+  .hero-scroll {
+    position: absolute; bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeUp 1s 1.4s forwards;
+    z-index: 10;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+  .scroll-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); writing-mode: vertical-rl;
+  }
+
+  /* ─── SECTIONS ────────────────────────────────────── */
+  section {
+    padding: 8rem 4rem;
+    position: relative;
+  }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 30px; height: 1px; background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300; line-height: 1.1;
+    color: var(--text); margin-bottom: 3rem;
+  }
+  .section-title em { font-style: italic; color: var(--gold-light); }
+
+  /* ─── ABOUT ───────────────────────────────────────── */
+  #about { background: var(--bg2); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 6rem; align-items: start;
+  }
+  .about-bio {
+    font-size: 1.05rem; line-height: 1.85; color: var(--text-muted);
+  }
+  .about-bio strong { color: var(--text); font-weight: 500; }
+  .about-bio p + p { margin-top: 1.2rem; }
+  .about-info { display: flex; flex-direction: column; gap: 0; }
+  .info-item {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .info-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .info-value { font-size: 0.9rem; color: var(--text-muted); text-align: right; }
+  .info-value a { color: var(--gold); text-decoration: none; }
+
+  /* ─── SKILLS ─────────────────────────────────────── */
+  #skills { background: var(--bg); }
+  .skills-layout {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .skill-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-3px); }
+  .skill-card:hover::before { transform: scaleX(1); }
+  .skill-card-icon {
+    font-size: 1.8rem; margin-bottom: 1rem; display: block;
+  }
+  .skill-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400; color: var(--text);
+    margin-bottom: 0.8rem;
+  }
+  .skill-card-desc {
+    font-size: 0.85rem; line-height: 1.7; color: var(--text-muted);
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.1em;
+    padding: 0.3rem 0.7rem;
+    background: var(--gold-dim);
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--gold);
+  }
+
+  /* ─── EXPERIENCE ──────────────────────────────────── */
+  #experience { background: var(--bg2); }
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute; top: 0; bottom: 0; left: 11px;
+    width: 1px; background: var(--border);
+  }
+  .timeline-item {
+    display: grid; grid-template-columns: 80px 1fr;
+    gap: 2rem; margin-bottom: 3.5rem; position: relative;
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .timeline-item.visible { opacity: 1; transform: none; }
+  .timeline-dot {
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 0.3rem;
+  }
+  .dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid var(--gold);
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; z-index: 1;
+  }
+  .dot-inner { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+  .timeline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim); margin-top: 0.6rem; text-align: center;
+    writing-mode: vertical-lr; transform: rotate(180deg);
+    white-space: nowrap;
+  }
+  .timeline-content {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 2rem; transition: border-color 0.3s;
+  }
+  .timeline-content:hover { border-color: rgba(201,168,76,0.3); }
+  .timeline-org {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.4rem;
+  }
+  .timeline-role {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400; color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .timeline-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; color: var(--text-dim); margin-bottom: 1rem;
+  }
+  .timeline-bullets { list-style: none; }
+  .timeline-bullets li {
+    font-size: 0.9rem; line-height: 1.7; color: var(--text-muted);
+    padding-left: 1.2rem; position: relative; margin-bottom: 0.4rem;
+  }
+  .timeline-bullets li::before {
+    content: '→'; position: absolute; left: 0;
+    color: var(--gold); font-size: 0.75rem;
+  }
+
+  /* ─── PROJECTS ────────────────────────────────────── */
+  #projects { background: var(--bg); }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden; position: relative;
+    transition: transform 0.35s, border-color 0.35s;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s, border-color 0.3s;
+  }
+  .project-card.visible { opacity: 1; transform: translateY(0); }
+  .project-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-5px); }
+  .project-thumb {
+    height: 180px; position: relative; overflow: hidden;
+  }
+  .project-thumb-bg {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .project-thumb-icon { font-size: 3rem; opacity: 0.3; }
+  .project-num {
+    position: absolute; top: 1rem; right: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; font-weight: 300;
+    color: rgba(255,255,255,0.06); line-height: 1;
+  }
+  .project-body { padding: 1.8rem; }
+  .project-category {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.6rem;
+  }
+  .project-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400; color: var(--text);
+    margin-bottom: 0.8rem; line-height: 1.2;
+  }
+  .project-desc {
+    font-size: 0.85rem; line-height: 1.65; color: var(--text-muted);
+    margin-bottom: 1.2rem;
+  }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+  /* ─── EDUCATION ────────────────────────────────────── */
+  #education { background: var(--bg2); }
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .edu-card {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 2.5rem; position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s, border-color 0.3s;
+  }
+  .edu-card.visible { opacity: 1; transform: none; }
+  .edu-card:hover { border-color: rgba(201,168,76,0.35); }
+  .edu-card-corner {
+    position: absolute; top: 0; right: 0;
+    width: 60px; height: 60px;
+    background: var(--gold-dim);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+  }
+  .edu-degree {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.6rem;
+  }
+  .edu-school {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; color: var(--text);
+    margin-bottom: 0.3rem; line-height: 1.2;
+  }
+  .edu-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; color: var(--text-dim); margin-bottom: 1.2rem;
+  }
+  .edu-gpa {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem; font-weight: 300; color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .edu-gpa-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim); margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+  .edu-highlights { list-style: none; }
+  .edu-highlights li {
+    font-size: 0.85rem; line-height: 1.65; color: var(--text-muted);
+    padding-left: 1.2rem; position: relative; margin-bottom: 0.4rem;
+  }
+  .edu-highlights li::before {
+    content: '◆'; position: absolute; left: 0;
+    color: var(--gold); font-size: 0.5rem; top: 0.35rem;
+  }
+
+  /* ─── FOOTER ──────────────────────────────────────── */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 300; color: var(--text-muted);
+  }
+  .footer-contact { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+  .footer-contact a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem; color: var(--text-dim); text-decoration: none;
+    letter-spacing: 0.05em; transition: color 0.25s;
+  }
+  .footer-contact a:hover { color: var(--gold); }
+
+  /* ─── ANIMATIONS ─────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ─── RESPONSIVE ─────────────────────────────────── */
+  @media (max-width: 1024px) {
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { min-height: 100vh; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .skills-layout { grid-template-columns: 1fr 1fr; }
+    .projects-grid { grid-template-columns: 1fr 1fr; }
+    .edu-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 2rem; }
+    .hero-left { padding: 6rem 2rem 4rem; }
+    .skills-layout { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 2rem; text-align: center; }
+    .footer-contact { align-items: center; }
+    .timeline-item { grid-template-columns: 50px 1fr; gap: 1rem; }
+  }
+
+  /* ─── NOISE OVERLAY ───────────────────────────────── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.022;
+    pointer-events: none;
+    z-index: 9990;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">Anthony <span>Rojas</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Information Systems · Security · Leadership</p>
+    <h1 class="hero-name">
+      Anthony<br><em>Rojas</em>
+    </h1>
+    <p class="hero-tagline">
+      Bilingual technologist bridging systems security, networking, and people — building things that matter, with teams that trust.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-solid">View Projects</a>
+      <a href="mailto:arojas31235@gmail.com" class="btn">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-accent-line"></div>
+    <div class="hero-stat-block">
+      <div class="hero-stat">
+        <div class="hero-stat-num">6+</div>
+        <div class="hero-stat-label">Years Studying</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">4+</div>
+        <div class="hero-stat-label">Languages & Frameworks</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">2×</div>
+        <div class="hero-stat-label">Bilingual</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-text">scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <p class="section-label">01 — Who I Am</p>
+    <h2 class="section-title">About <em>Me</em></h2>
+    <div class="about-grid">
+      <div class="about-bio">
+        <p>I'm <strong>Anthony Rojas</strong> — an Information Systems student at NJIT, a former NASA scholar, and someone who's always been drawn to the intersection of technology and people. Growing up in Clifton, NJ, I learned early that hard work and curiosity open doors.</p>
+        <p>My journey has taken me from tutoring peers in discrete mathematics at Passaic County Community College to leading a team to a <strong>top-3 finish in a cybersecurity capstone</strong> at NJIT — designing a secure airport network infrastructure that caught the attention of a CISCO panel.</p>
+        <p>I've managed teams of 15 as a Front End Manager at ShopRite, participated in hackathons, and contributed to a hypothetical rover mission presented to <strong>NASA employees</strong>. Whether I'm writing Python, defusing a customer conflict, or deep in a security audit, I bring the same focus: get it done, do it right.</p>
+        <p>Outside of tech, I'm a basketball and soccer fan who reads, listens to podcasts, and is endlessly curious about world history and social sciences. <strong>Fluent in both English and Spanish</strong>, I'm always ready to connect across cultures and disciplines.</p>
+      </div>
+      <div class="about-info">
+        <div class="info-item">
+          <span class="info-label">Location</span>
+          <span class="info-value">Clifton, NJ</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Email</span>
+          <span class="info-value"><a href="mailto:arojas31235@gmail.com">arojas31235@gmail.com</a></span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Phone</span>
+          <span class="info-value">(973) 932-7419</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Degree</span>
+          <span class="info-value">B.A. Information Systems</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">School</span>
+          <span class="info-value">NJIT · 2026</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Languages</span>
+          <span class="info-value">English · Spanish</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Interests</span>
+          <span class="info-value">Security · Hackathons · History</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-inner">
+    <p class="section-label">02 — What I Know</p>
+    <h2 class="section-title">Skills &amp; <em>Expertise</em></h2>
+    <div class="skills-layout">
+      <div class="skill-card">
+        <span class="skill-card-icon">🛡️</span>
+        <h3 class="skill-card-title">Cybersecurity</h3>
+        <p class="skill-card-desc">Hands-on coursework in ethical hacking and computer systems security. Led a team to design a secure airport network infrastructure that ranked in the top 3 of NJIT's capstone.</p>
+        <div class="skill-tags">
+          <span class="tag">Ethical Hacking</span>
+          <span class="tag">Network Security</span>
+          <span class="tag">Infrastructure</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">💻</span>
+        <h3 class="skill-card-title">Programming</h3>
+        <p class="skill-card-desc">Experienced across multiple languages from academic and project-based work, including systems programming, scripting, and data management.</p>
+        <div class="skill-tags">
+          <span class="tag">Java</span>
+          <span class="tag">C++</span>
+          <span class="tag">Python</span>
+          <span class="tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">🌐</span>
+        <h3 class="skill-card-title">Networking</h3>
+        <p class="skill-card-desc">Formal coursework in Networking Essentials and real-world application through security-focused infrastructure design recognized by a CISCO panel.</p>
+        <div class="skill-tags">
+          <span class="tag">Networking Essentials</span>
+          <span class="tag">CISCO</span>
+          <span class="tag">IT Infrastructure</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">👥</span>
+        <h3 class="skill-card-title">Leadership</h3>
+        <p class="skill-card-desc">Led teams of up to 15 people in a fast-paced retail management role. Organized workflows, resolved conflicts, and maintained high standards under pressure.</p>
+        <div class="skill-tags">
+          <span class="tag">Team Management</span>
+          <span class="tag">Conflict Resolution</span>
+          <span class="tag">Operations</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">🗣️</span>
+        <h3 class="skill-card-title">Communication</h3>
+        <p class="skill-card-desc">Bilingual in English and Spanish. Presented research to NASA employees and at public events. Tutored students in programming and mathematics.</p>
+        <div class="skill-tags">
+          <span class="tag">Bilingual</span>
+          <span class="tag">Public Speaking</span>
+          <span class="tag">Mentoring</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">🔍</span>
+        <h3 class="skill-card-title">Problem Solving</h3>
+        <p class="skill-card-desc">Adaptable and detail-oriented across academic and professional settings. Brings patience and creativity to complex technical and interpersonal challenges.</p>
+        <div class="skill-tags">
+          <span class="tag">Analytical</span>
+          <span class="tag">Adaptable</span>
+          <span class="tag">Detail-Oriented</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-inner">
+    <p class="section-label">03 — Where I've Been</p>
+    <h2 class="section-title">Work <em>Experience</em></h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot"><div class="dot-inner"></div></div>
+          <div class="timeline-date">2020</div>
+        </div>
+        <div class="timeline-content">
+          <p class="timeline-org">NASA Community College Aerospace Scholars</p>
+          <h3 class="timeline-role">Internship — Computer Systems</h3>
+          <p class="timeline-period">September 2020 – October 2020</p>
+          <ul class="timeline-bullets">
+            <li>Collaborated with nine peers to develop a rover mission to the Moon.</li>
+            <li>Presented the completed rover mission directly to a board of NASA employees.</li>
+            <li>Served as the team lead for all computer systems aspects of the project.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">
+          <div class="dot"><div class="dot-inner"></div></div>
+          <div class="timeline-date">2023</div>
+        </div>
+        <div class="timeline-content">
+          <p class="timeline-org">ShopRite, Wayne, NJ</p>
+          <h3 class="timeline-role">Front End Manager</h3>
+          <p class="timeline-period">March 2023 – September 2023</p>
+          <ul class="timeline-bullets">
+            <li>Successfully led a team of up to 15 individuals across daily operations.</li>
+            <li>Organized department workflows to ensure consistent efficiency and presentability.</li>
+            <li>Delivered excellent customer service and resolved volatile interactions with calm professionalism.</li>
+            <li>Demonstrated strong multi-tasking and problem-solving in a high-volume environment.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <p class="section-label">04 — What I've Built</p>
+    <h2 class="section-title">Featured <em>Projects</em></h2>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+          <div class="project-thumb-bg">
+            <span class="project-thumb-icon">✈️</span>
+          </div>
+          <div class="project-num">01</div>
+        </div>
+        <div class="project-body">
+          <p class="project-category">Cybersecurity · NJIT Capstone</p>
+          <h3 class="project-title">Secure Airport Network Infrastructure</h3>
+          <p class="project-desc">Led a team to design and implement a fully secure airport network from the ground up. Finished in the top 3 of NJIT's Capstone course and earned recognition from a CISCO panel as top project manager.</p>
+          <div class="project-tags">
+            <span class="tag">Network Security</span>
+            <span class="tag">CISCO</span>
+            <span class="tag">Infrastructure</span>
+            <span class="tag">Team Lead</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: linear-gradient(135deg, #0d1b2a, #1b4332);">
+          <div class="project-thumb-bg">
+            <span class="project-thumb-icon">🌕</span>
+          </div>
+          <div class="project-num">02</div>
+        </div>
+        <div class="project-body">
+          <p class="project-category">Aerospace · NASA Internship</p>
+          <h3 class="project-title">Hypothetical Lunar Rover Mission</h3>
+          <p class="project-desc">As part of the NASA Community College Aerospace Scholars program, co-developed a complete rover mission concept for the Moon. Owned all computer systems components and presented findings to a live NASA review board.</p>
+          <div class="project-tags">
+            <span class="tag">Systems Design</span>
+            <span class="tag">NASA</span>
+            <span class="tag">Presentation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: linear-gradient(135deg, #2d1b69, #11052c);">
+          <div class="project-thumb-bg">
+            <span class="project-thumb-icon">🏆</span>
+          </div>
+          <div class="project-num">03</div>
+        </div>
+        <div class="project-body">
+          <p class="project-category">History · Academic Research</p>
+          <h3 class="project-title">History of Paterson Sports — Original Research</h3>
+          <p class="project-desc">Conducted independent original research on the history of sports in Paterson, NJ. Presented findings at multiple public events, showcasing a passion for local history and strong communication skills.</p>
+          <div class="project-tags">
+            <span class="tag">Research</span>
+            <span class="tag">Public Speaking</span>
+            <span class="tag">Honors Program</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: linear-gradient(135deg, #1c1c1c, #3d2b1f);">
+          <div class="project-thumb-bg">
+            <span class="project-thumb-icon">💡</span>
+          </div>
+          <div class="project-num">04</div>
+        </div>
+        <div class="project-body">
+          <p class="project-category">Community · PCCC</p>
+          <h3 class="project-title">Peer Tutoring — Programming &amp; Discrete Math</h3>
+          <p class="project-desc">Tutored fellow students at Passaic County Community College in programming fundamentals and discrete mathematics — translating complex concepts into approachable lessons while maintaining a 3.5 GPA.</p>
+          <div class="project-tags">
+            <span class="tag">Teaching</span>
+            <span class="tag">Java</span>
+            <span class="tag">Discrete Math</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: linear-gradient(135deg, #0a1628, #1e3a5f);">
+          <div class="project-thumb-bg">
+            <span class="project-thumb-icon">⚡</span>
+          </div>
+          <div class="project-num">05</div>
+        </div>
+        <div class="project-body">
+          <p class="project-category">Competitive · Hackathons</p>
+          <h3 class="project-title">Hackathon Participant</h3>
+          <p class="project-desc">Participates in hackathons, applying skills in rapid prototyping, collaboration under pressure, and creative problem-solving to build functional solutions within tight time constraints.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Rapid Prototyping</span>
+            <span class="tag">Teamwork</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-thumb" style="background: linear-gradient(135deg, #1a0a0a, #4a1010);">
+          <div class="project-thumb-bg">
+            <span class="project-thumb-icon">🔐</span>
+          </div>
+          <div class="project-num">06</div>
+        </div>
+        <div class="project-body">
+          <p class="project-category">Academic · NJIT</p>
+          <h3 class="project-title">Ethical Hacking &amp; Security Coursework</h3>
+          <p class="project-desc">Deep-dived into offensive and defensive security techniques through NJIT's specialized coursework. Applied methodologies in penetration testing, vulnerability analysis, and secure system design.</p>
+          <div class="project-tags">
+            <span class="tag">Ethical Hacking</span>
+            <span class="tag">Pen Testing</span>
+            <span class="tag">Security Analysis</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-inner">
+    <p class="section-label">05 — Where I Learned</p>
+    <h2 class="section-title"><em>Education</em></h2>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-card-corner"></div>
+        <p class="edu-degree">B.A. · Information Systems</p>
+        <h3 class="edu-school">New Jersey Institute of Technology</h3>
+        <p class="edu-period">September 2020 – May 2026 · Newark, NJ</p>
+        <div>
+          <span class="edu-gpa">2.77</span>
+          <span class="edu-gpa-label">GPA</span>
+        </div>
+        <ul class="edu-highlights">
+          <li>Relevant coursework: Ethical Hacking, Computer Systems Security, IT Capstone.</li>
+          <li>Led team to top-3 finish designing a secure airport network infrastructure.</li>
+          <li>Recognized as top project manager by the CISCO evaluation panel.</li>
+        </ul>
+      </div>
+      <div class="edu-card">
+        <div class="edu-card-corner"></div>
+        <p class="edu-degree">A.A.S. · Computer Science</p>
+        <h3 class="edu-school">Passaic County Community College</h3>
+        <p class="edu-period">September 2018 – August 2020 · Paterson, NJ</p>
+        <div>
+          <span class="edu-gpa">3.5</span>
+          <span class="edu-gpa-label">GPA</span>
+        </div>
+        <ul class="edu-highlights">
+          <li>Relevant coursework: Networking Essentials.</li>
+          <li>Member of the Honors Program and Phi Theta Kappa honor society.</li>
+          <li>Conducted and presented original research on Paterson sports history.</li>
+          <li>Tutored peers in programming and discrete mathematics.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Anthony Rojas</div>
+  <div class="footer-contact">
+    <a href="mailto:arojas31235@gmail.com">arojas31235@gmail.com</a>
+    <a href="tel:9739327419">(973) 932-7419</a>
+    <a>Clifton, NJ 07011</a>
+  </div>
+</footer>
+
+<script>
+  // ── Custom Cursor ─────────────────────────────
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // ── Intersection Observer 
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.timeline-item, .project-card, .edu-card').forEach(el => observer.observe(el));
+
+  // Stagger project cards
+  document.querySelectorAll('.project-card').forEach((card, i) => {
+    card.style.transitionDelay = (i * 0.08) + 's';
+  });
+</script>
+</body>
+</html>
